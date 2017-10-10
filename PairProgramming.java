@@ -18,7 +18,7 @@ public class PairProgramming
 		String word1, word2;
 		int[][] P = null;
 		while (true) {
-			itemSelected = menu();
+			itemSelected = menu();//menu
 			switch (itemSelected) {
 			case 1://¹¦ÄÜ1
 				if (G.getVertexNum() != 0) {
