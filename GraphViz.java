@@ -1,5 +1,5 @@
 
-// GraphViz.java - a simple API to call dot from Java programs
+// GraphViz.java - a simple API to call dot from Java programs very useful
 
 /*$Id$*/
 /*
