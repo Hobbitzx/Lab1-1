@@ -1,16 +1,16 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
+import java.nio.file.Paths;//import
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Scanner;
+import java.util.Scanner;//import
 
 public class PairProgramming
 {
 	
-	public static void main(String[] args)
+	public static void main(String[] args)//main
 	{
 		int itemSelected;
 		Scanner in = new Scanner(System.in);
@@ -20,7 +20,7 @@ public class PairProgramming
 		while (true) {
 			itemSelected = menu();
 			switch (itemSelected) {
-			case 1:
+			case 1://功能1
 				if (G.getVertexNum() != 0) {
 					System.out.println("图已经创建！");
 					break;
@@ -50,11 +50,11 @@ public class PairProgramming
 				fileInput.close();
 				System.out.println("图创建完成。");
 				break;
-			case 2:
+			case 2://功能2
 				showDirectedGraph(G);
 				generatePicture(G.graphDespForGv(), "E:\\graph.png");
 				break;
-			case 3:
+			case 3://功能3
 				System.out.println("请输入要查询的两个单词，输入#结束：");
 				while (in.hasNext()) {
 					word1 = in.next();
@@ -64,7 +64,7 @@ public class PairProgramming
 					printBridgeWords(G, word1, word2);
 				}
 				break;
-			case 4:
+			case 4://功能4
 				System.out.println("Input a new line:");
 				if (in.hasNextLine()) {
 					String newLine;
@@ -76,7 +76,7 @@ public class PairProgramming
 					newLineInput.close();
 				}
 				break;
-			case 5:
+			case 5://功能5
 				boolean[][] outStand = new boolean[G.getVertexNum()][G.getVertexNum()];
 				for (int i = 0; i < outStand.length; ++i) Arrays.fill(outStand[i], false);
 				String desp;
@@ -104,7 +104,7 @@ public class PairProgramming
 					}
 				}
 				break;
-			case 6:
+			case 6://功能6
 				String randomstring = G.randomWalk();
 				System.out.println("随机游走路径：");
 				System.out.println(randomstring);
@@ -240,7 +240,7 @@ public class PairProgramming
 }
 
 //有向加权图（邻接表表示）
-class Graph
+class Graph//图类
 {
 	//边表顶点
 	private class EdgeNode

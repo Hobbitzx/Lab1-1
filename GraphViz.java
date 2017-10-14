@@ -1,5 +1,5 @@
 
-// GraphViz.java - a simple API to call dot from Java programs
+// GraphViz.java - a simple API to call dot from Java programs very useful
 
 /*$Id$*/
 /*
@@ -23,14 +23,14 @@
  *                                                                            *
  ******************************************************************************
  */
-
+//pay attention to this
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.InputStreamReader;
+import java.io.InputStreamReader;//import
 
 /**
  * <dl>
@@ -73,7 +73,7 @@ import java.io.InputStreamReader;
  * @version v0.1, 2003/12/04 (December) -- first release
  * @author  Laszlo Szathmary (<a href="jabba.laci@gmail.com">jabba.laci@gmail.com</a>)
  */
-public class GraphViz
+public class GraphViz//ª≠Õº¿‡
 {
     /**
      * Detects the client's operating system.
@@ -398,7 +398,6 @@ public class GraphViz
     }
 
 } // end of class GraphViz
-
 
 //Step 2.4
 //Step 2.5
