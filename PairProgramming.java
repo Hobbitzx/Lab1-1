@@ -52,7 +52,7 @@ public class PairProgramming
 				break;
 			case 2://功能2
 				showDirectedGraph(G);
-				generatePicture(G.graphDespForGv());
+				generatePicture(G.graphDespForGv(), "E:\\graph.png");
 				break;
 			case 3://功能3
 				System.out.println("请输入要查询的两个单词，输入#结束：");
@@ -100,7 +100,7 @@ public class PairProgramming
 						System.out.println("从\"" + word1 + "\"到\"" + word2 + "\"的最短路径：");
 						System.out.println(G.calcShortestPath(word1, word2));
 						desp = despOfShortestPath(G, P, word1, word2, outStand);
-						generatePicture(desp + G.graphDespForGv(outStand));
+						generatePicture(desp + G.graphDespForGv(outStand), "E:\\shortest path.png");
 					}
 				}
 				break;
@@ -110,7 +110,7 @@ public class PairProgramming
 				System.out.println(randomstring);
 				PrintWriter out = null;
 				try {
-					out = new PrintWriter("E:\\2.txt");
+					out = new PrintWriter("E:\\random walk.txt");
 			        out.print(randomstring);
 				}
 				catch(IOException e) {
@@ -227,14 +227,14 @@ public class PairProgramming
 	}
 	
 	//用GraphViz生成图片文件，desp是描述边的字符串
-	public static void generatePicture(String desp)
+	public static void generatePicture(String desp, String pictureFileName)
 	{
 		GraphViz gv = new GraphViz();
 		gv.addln(gv.start_graph() + desp + gv.end_graph());
 		gv.increaseDpi();
-		File outfile = new File("E:\\out.png");
+		File outfile = new File(pictureFileName);
 		gv.writeGraphToFile(gv.getGraph(gv.getDotSource(), "png", "dot"), outfile);
-		System.out.println("已生成图片E:\\out.png");
+		System.out.println("已生成图片" + pictureFileName);
 	}
 
 }
@@ -331,6 +331,7 @@ class Graph//图类
 		addEdge(n1, n2);
 	}
 	
+	//打印有向图
 	public void print()
 	{
 		for (VertexNode v : vertexList) {
@@ -347,7 +348,7 @@ class Graph//图类
 	//A(k)[i][j]=min{A(k-1)[i][j],A(k-1)[i][k]+A(k-1)[k][j]}
 	//且A(k)[i][k]=A(k-1)[i][k],A(k)[k][j]=A(k-1)[k][j]
 	//P[i][j]==k表示由i到j的最短路径需经过k（并非说明是前驱顶点）
-	//若为-2则表示没有路径，若为-1则表示有直接相连的边而不经过其他顶点
+	//若为-1则表示没有路径，若为j则表示有直接相连的边而不经过其他顶点
 	int[][] floyd()
 	{
 		int n = getVertexNum();
@@ -356,7 +357,7 @@ class Graph//图类
 		for (int i = 0; i < n; ++i)
 			for (int j = 0; j < n; ++j) {
 				A[i][j] = weight(i, j);
-				P[i][j] = A[i][j] < Integer.MAX_VALUE ? -1 : -2;
+				P[i][j] = A[i][j] < Integer.MAX_VALUE ? j : -1;
 			}
 		
 		for (int k = 0; k < n; ++k)
@@ -374,22 +375,23 @@ class Graph//图类
 	//否则递归调用floyd_calc_path(src,P[src][dst])和floyd_calc_path(P[src][dst],dst)
 	public void floydCalcPath(int src, int dst, ArrayList<Integer> path)
 	{
-		if (P[src][dst] == -2) return;
+		if (P == null || P.length != vertexList.size()) P = floyd();
+		if (P[src][dst] == -1) return;
 		if (path.isEmpty()) path.add(src);
-		if (P[src][dst] == -1) path.add(dst);
+		if (P[src][dst] == dst) path.add(dst);
 		else {
 			floydCalcPath(src, P[src][dst], path);
 			floydCalcPath(P[src][dst], dst, path);
 		}
 	}
 	
+	//调用floydCalcPath()计算单词word1到word2的最短路径并以字符串形式返回
 	public String calcShortestPath(String word1, String word2)
 	{
 		ArrayList<Integer> path = new ArrayList<>();
 		String res = new String();
 		int v1 = findVertex(word1), v2 = findVertex(word2);
 		if (v1 < 0 || v2 < 0) return "No path.";
-		if (P == null || P.length != vertexList.size()) P = floyd();
 		floydCalcPath(v1, v2, path);
 		
 		for (int i = 0; i < path.size(); ++i) {
@@ -399,6 +401,7 @@ class Graph//图类
 		return res;
 	}
 	
+	//返回生成图片文件所需的边的信息
 	public String graphDespForGv()
 	{
 		StringBuilder s = new StringBuilder();
@@ -409,7 +412,8 @@ class Graph//图类
 		}
 		return s.toString();
 	}
-	
+
+	//返回生成图片文件所需的边的信息（outStand标记的最短路径用红色显示）
 	public String graphDespForGv(boolean[][] outStand)
 	{
 		StringBuilder s = new StringBuilder();
@@ -425,6 +429,7 @@ class Graph//图类
 		return s.toString();
 	}
 	
+	//查询单词word1和word2的桥接词并返回，若有多个则用空格隔开
 	public String queryBridgeWords(String word1, String word2)
 	{
 		int v1 = findVertex(word1), v2 = findVertex(word2);
@@ -442,6 +447,7 @@ class Graph//图类
 		return res;
 	}
 	
+	//根据桥接词生成新文本，在每两个相邻的单词之前插入其桥接词
 	public String generateNewText(String inputText)
 	{
 		StringBuilder inBuilder = new StringBuilder();
@@ -451,11 +457,11 @@ class Graph//图类
 			in.close();
 			return "";
 		}
-		word1 = in.next();
+		word1 = in.next().toLowerCase();
 		inBuilder.append(word1 + " ");
 		
 		while(in.hasNext()) {
-			word2 = in.next();
+			word2 = in.next().toLowerCase();
 			result = queryBridgeWords(word1, word2);
 			Scanner newWord = new Scanner(result);
 			if (!result.equals("") && !newWord.hasNextInt()) {
@@ -469,6 +475,7 @@ class Graph//图类
 		return inBuilder.toString();
 	}
 	
+	//随机游走，若遇到没有邻接点的顶点或已经走过的边则停止，以字符串形式返回走过的路径
 	public String randomWalk()
 	{
 		boolean[][] visited = new boolean[vertexList.size()][vertexList.size()];
@@ -498,3 +505,7 @@ class Graph//图类
 	}
 	
 }
+//Step 2.4
+//Step 2.5
+//Step 2.7
+//Step 3.5
