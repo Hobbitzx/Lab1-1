@@ -1,4 +1,4 @@
-
+package Lab4;
 // GraphViz.java - a simple API to call dot from Java programs
 
 /*$Id$*/
@@ -73,12 +73,15 @@ import java.io.InputStreamReader;
  * @version v0.1, 2003/12/04 (December) -- first release
  * @author  Laszlo Szathmary (<a href="jabba.laci@gmail.com">jabba.laci@gmail.com</a>)
  */
-public class GraphViz
-{
+public class GraphViz {
+	/**
+	 * aaaa.
+	 */
+	public static final int CURRENT_DPIPOS = 7;
     /**
      * Detects the client's operating system.
      */
-    private final static String osName = System.getProperty("os.name").replaceAll("\\s","");
+    private static final String OS_NAME = System.getProperty("os.name").replaceAll("\\s", "");
 
     /**
      * The image size in dpi. 96 dpi is normal size. Higher values are 10% higher each.
@@ -91,13 +94,13 @@ public class GraphViz
     /**
      * Define the index in the image size array.
      */
-    private int currentDpiPos = 7;
+    private int currentDpiPos = CURRENT_DPIPOS;
 
     /**
      * Increase the image size (dpi).
      */
     public void increaseDpi() {
-        if ( this.currentDpiPos < (this.dpiSizes.length - 1) ) {
+        if (this.currentDpiPos < (this.dpiSizes.length - 1)) {
             ++this.currentDpiPos;
         }
     }
@@ -111,7 +114,10 @@ public class GraphViz
         }
     }
 
-    public int getImageDpi() {
+    /**
+     * @return  aaa
+     */
+    public final int getImageDpi() {
         return this.dpiSizes[this.currentDpiPos];
     }
 
@@ -120,8 +126,14 @@ public class GraphViz
      */
     private StringBuilder graph = new StringBuilder();
 
+    /**
+     * aaa.
+     */
     private String tempDir;
 
+    /**
+     * aa.
+     */
     private String executable;
 
     /**
@@ -138,13 +150,13 @@ public class GraphViz
      * tempDir = /tmp
      */
     public GraphViz() {
-        if (GraphViz.osName.contains("Windows")) {
+        if (GraphViz.OS_NAME.contains("Windows")) {
             this.tempDir = "D:";
             this.executable = "D:\\Graphviz2.38\\bin\\dot.exe";
-        } else if (GraphViz.osName.equals("MacOSX")) {
+        } else if (GraphViz.OS_NAME.equals("MacOSX")) {
             this.tempDir = "/tmp";
             this.executable = "/usr/local/bin/dot";
-        } else if (GraphViz.osName.equals("Linux")) {
+        } else if (GraphViz.OS_NAME.equals("Linux")) {
             this.tempDir = "/tmp";
             this.executable = "/usr/bin/dot";
         }
@@ -156,9 +168,13 @@ public class GraphViz
      * @param executable absolute path to dot executable
      * @param tempDir absolute path to temp directory
      */
-    public GraphViz(String executable, String tempDir) {
-        this.executable = executable;
-        this.tempDir = tempDir;
+    /**
+     * @param exe sss
+     * @param temp  sss
+     */
+    public GraphViz(final String exe, final String temp) {
+        this.executable = exe;
+        this.tempDir = temp;
     }
 
     /**
@@ -172,14 +188,20 @@ public class GraphViz
     /**
      * Adds a string to the graph's source (without newline).
      */
-    public void add(String line) {
+    /**
+     * @param line aaa
+     */
+    public void add(final String line) {
         this.graph.append(line);
     }
 
     /**
      * Adds a string to the graph's source (with newline).
      */
-    public void addln(String line) {
+    /**
+     * @param line aaa
+     */
+    public void addln(final String line) {
         this.graph.append(line + "\n");
     }
 
@@ -190,7 +212,10 @@ public class GraphViz
         this.graph.append('\n');
     }
 
-    public void clearGraph(){
+    /**
+     * aaa.
+     */
+    public final void clearGraph() {
         this.graph = new StringBuilder();
     }
 
@@ -210,23 +235,29 @@ public class GraphViz
      * @see http://www.graphviz.org under the Roadmap title
      * @return A byte array containing the image of the graph.
      */
-    public byte[] getGraph(String dot_source, String type, String representationType)
-    {
+    /**
+     * @param dotsource aaa
+     * @param type sss
+     * @param representationType d
+     * @return bv
+     */
+    public byte[] getGraph(final String dotsource, final String type, final String representationType) {
         File dot;
-        byte[] img_stream = null;
+        byte[] imgstream = null;
 
         try {
-            dot = writeDotSourceToFile(dot_source);
-            if (dot != null)
-            {
-                img_stream = get_img_stream(dot, type, representationType);
-                if (dot.delete() == false) {
+            dot = writeDotSourceToFile(dotsource);
+            if (dot != null) {
+            	imgstream = getimgstream(dot, type, representationType);
+                if (!dot.delete()) {
                     System.err.println("Warning: " + dot.getAbsolutePath() + " could not be deleted!");
                 }
-                return img_stream;
+                return imgstream;
             }
             return null;
-        } catch (java.io.IOException ioe) { return null; }
+        } catch (java.io.IOException ioe) {
+        	return null;
+        	}
     }
 
     /**
@@ -235,8 +266,7 @@ public class GraphViz
      * @param file  Name of the file to where we want to write.
      * @return Success: 1, Failure: -1
      */
-    public int writeGraphToFile(byte[] img, String file)
-    {
+    public int writeGraphToFile(final byte[] img, final String file) {
         File to = new File(file);
         return writeGraphToFile(img, to);
     }
@@ -247,13 +277,14 @@ public class GraphViz
      * @param to    A File object to where we want to write.
      * @return Success: 1, Failure: -1
      */
-    public int writeGraphToFile(byte[] img, File to)
-    {
+    public int writeGraphToFile(final byte[] img, final File to) {
         try {
             FileOutputStream fos = new FileOutputStream(to);
             fos.write(img);
             fos.close();
-        } catch (java.io.IOException ioe) { return -1; }
+        } catch (java.io.IOException ioe) {
+        	return -1;
+        	}
         return 1;
     }
 
@@ -274,10 +305,9 @@ public class GraphViz
      * @see http://www.graphviz.org under the Roadmap title
      * @return The image of the graph in .gif format.
      */
-    private byte[] get_img_stream(File dot, String type, String representationType)
-    {
+    private byte[] getimgstream(final File dot, final String type, final String representationType) {
         File img;
-        byte[] img_stream = null;
+        byte[] imgstream = null;
 
         try {
             img = File.createTempFile("graph_", "." + type, new File(this.tempDir));
@@ -285,33 +315,31 @@ public class GraphViz
 
             // patch by Mike Chenault
             // representation type with -K argument by Olivier Duplouy
-            String[] args = { executable, "-T" + type, "-K" + representationType, "-Gdpi=" + dpiSizes[this.currentDpiPos], dot.getAbsolutePath(), "-o", img.getAbsolutePath() };
+            String[] args = {executable, "-T" + type, "-K" + representationType, "-Gdpi=" + dpiSizes[this.currentDpiPos], dot.getAbsolutePath(), "-o", img.getAbsolutePath() };
             Process p = rt.exec(args);
             p.waitFor();
 
             FileInputStream in = new FileInputStream(img.getAbsolutePath());
-            img_stream = new byte[in.available()];
-            in.read(img_stream);
+            imgstream = new byte[in.available()];
+            in.read(imgstream);
             // Close it if we need to
-            if( in != null ) {
+            if (in != null) {
                 in.close();
             }
 
-            if (img.delete() == false) {
+            if (!img.delete()) {
                 System.err.println("Warning: " + img.getAbsolutePath() + " could not be deleted!");
             }
-        }
-        catch (java.io.IOException ioe) {
+        } catch (java.io.IOException ioe) {
             System.err.println("Error:    in I/O processing of tempfile in dir " + tempDir + "\n");
             System.err.println("       or in calling external command");
             ioe.printStackTrace();
-        }
-        catch (java.lang.InterruptedException ie) {
+        } catch (java.lang.InterruptedException ie) {
             System.err.println("Error: the execution of the external program was interrupted");
             ie.printStackTrace();
         }
 
-        return img_stream;
+        return imgstream;
     }
 
     /**
@@ -320,16 +348,19 @@ public class GraphViz
      * @param str Source of the graph (in dot language).
      * @return The file (as a File object) that contains the source of the graph.
      */
-    private File writeDotSourceToFile(String str) throws java.io.IOException
-    {
+    /**
+     * @param str f
+     * @return u
+     * @throws java.io.IOException c
+     */
+    private File writeDotSourceToFile(final String str) throws java.io.IOException {
         File temp;
         try {
             temp = File.createTempFile("graph_", ".dot.tmp", new File(tempDir));
             FileWriter fout = new FileWriter(temp);
             fout.write(str);
             fout.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("Error: I/O error while writing the dot source to temp file!");
             return null;
         }
@@ -340,7 +371,7 @@ public class GraphViz
      * Returns a string that is used to start a graph.
      * @return A string to open a graph.
      */
-    public String start_graph() {
+    public String startgraph() {
         return "digraph G {";
     }
 
@@ -348,7 +379,7 @@ public class GraphViz
      * Returns a string that is used to end a graph.
      * @return A string to close a graph.
      */
-    public String end_graph() {
+    public String endgraph() {
         return "}";
     }
 
@@ -357,7 +388,11 @@ public class GraphViz
      * that is used to start a subgraph.
      * @return A string to open a subgraph.
      */
-    public String start_subgraph(int clusterid) {
+    /**
+     * @param clusterid k
+     * @return y
+     */
+    public String startsubgraph(final int clusterid) {
         return "subgraph cluster_" + clusterid + " {";
     }
 
@@ -365,7 +400,7 @@ public class GraphViz
      * Returns a string that is used to end a graph.
      * @return A string to close a graph.
      */
-    public String end_subgraph() {
+    public String endsubgraph() {
         return "}";
     }
 
@@ -375,12 +410,10 @@ public class GraphViz
      * @param input Input text file containing the DOT graph
      * source.
      */
-    public void readSource(String input)
-    {
+    public void readSource(final String input) {
         StringBuilder sb = new StringBuilder();
 
-        try
-        {
+        try {
             FileInputStream fis = new FileInputStream(input);
             DataInputStream dis = new DataInputStream(fis);
             BufferedReader br = new BufferedReader(new InputStreamReader(dis));
@@ -389,8 +422,7 @@ public class GraphViz
                 sb.append(line);
             }
             dis.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
 
